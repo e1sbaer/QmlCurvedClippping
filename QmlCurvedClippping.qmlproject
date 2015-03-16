@@ -7,7 +7,7 @@ Project {
 
     /* Include .qml, .js, and image files from current directory and subdirectories */
     QmlFiles {
-        directory: "."
+        directory: [ ".", "Gauge" ]
     }
     JavaScriptFiles {
         directory: "."

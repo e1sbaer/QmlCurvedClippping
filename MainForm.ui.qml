@@ -1,4 +1,5 @@
 import QtQuick 2.3
+import "Gauge"
 
 Rectangle {
     property alias mouseArea: mouseArea
@@ -11,8 +12,8 @@ Rectangle {
         anchors.fill: parent
     }
 
-    Text {
-        anchors.centerIn: parent
-        text: "Hello World"
+    Gauge {
+        anchors.fill: parent
+        anchors.margins: progressBarWidth
     }
 }
