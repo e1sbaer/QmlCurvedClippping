@@ -3,6 +3,7 @@ import "Gauge"
 
 Rectangle {
     property alias mouseArea: mouseArea
+    property alias gauge: gauge
 
     width: 360
     height: 360
@@ -13,6 +14,7 @@ Rectangle {
     }
 
     Gauge {
+        id: gauge
         anchors.fill: parent
         anchors.margins: progressBarWidth
     }
