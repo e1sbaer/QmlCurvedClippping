@@ -39,6 +39,8 @@ Item {
 
     property string unit: "%"
     property real value: 55.5555
+    property real minValue: 0
+    property real maxValue: 100
 
     Rectangle {
         id: outerBackground
@@ -58,6 +60,49 @@ Item {
                 radius: Math.max(width, height)
                 color: root.backgroundColor
             }
+        }
+    }
+    Item {
+        id: indicatorContainer
+        anchors.fill: parent
+        anchors.margins: progressBarWidth
+
+        property real normalizedValue: (root.value - root.minValue) / (root.maxValue - root.minValue)
+
+        Indicator {
+            id: indicatorTopRight
+            anchors.left: parent.horizontalCenter
+            anchors.bottom: parent.verticalCenter
+            width: Math.max(parent.width, parent.height) / 2
+            height: width
+            angle: indicatorContainer.normalizedValue * 360 - rotation
+        }
+        Indicator {
+            id: indicatorBottomRight
+            anchors.left: parent.horizontalCenter
+            anchors.top: parent.verticalCenter
+            width: Math.max(parent.width, parent.height) / 2
+            height: width
+            angle: indicatorContainer.normalizedValue * 360 - rotation
+            rotation: 90
+        }
+        Indicator {
+            id: indicatorBottomLeft
+            anchors.right: parent.horizontalCenter
+            anchors.top: parent.verticalCenter
+            width: Math.max(parent.width, parent.height) / 2
+            height: width
+            angle: indicatorContainer.normalizedValue * 360 - rotation
+            rotation: 180
+        }
+        Indicator {
+            id: indicatorTopLeft
+            anchors.right: parent.horizontalCenter
+            anchors.bottom: parent.verticalCenter
+            width: Math.max(parent.width, parent.height) / 2
+            height: width
+            angle: indicatorContainer.normalizedValue * 360 - rotation
+            rotation: 270
         }
     }
     Item {
