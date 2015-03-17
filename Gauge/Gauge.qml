@@ -26,6 +26,7 @@
 *******************************************************************************/
 
 import QtQuick 2.4
+import QtGraphicalEffects 1.0
 
 Item {
     id: root
@@ -68,6 +69,11 @@ Item {
         anchors.margins: progressBarWidth
 
         property real normalizedValue: (root.value - root.minValue) / (root.maxValue - root.minValue)
+
+        layer.enabled: true
+        layer.effect: OpacityMask {
+            maskSource: innerBackground
+        }
 
         Indicator {
             id: indicatorTopRight
