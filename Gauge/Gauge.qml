@@ -54,12 +54,17 @@ Item {
             anchors.margins: progressBarWidth
             radius:  Math.max(width, height)
             color: root.traceColor
-            Rectangle {
-                id: innerBackground
+            Item {
+                id: innerMaskSource
                 anchors.fill: parent
-                anchors.margins: progressBarWidth
-                radius: Math.max(width, height)
-                color: root.backgroundColor
+                layer.enabled: true
+                Rectangle {
+                    id: innerBackground
+                    anchors.fill: parent
+                    anchors.margins: progressBarWidth
+                    radius: Math.max(width, height)
+                    color: root.backgroundColor
+                }
             }
         }
     }
@@ -72,43 +77,62 @@ Item {
 
         layer.enabled: true
         layer.effect: OpacityMask {
-            maskSource: innerBackground
+            maskSource: progressBarTrace
         }
 
-        Indicator {
-            id: indicatorTopRight
-            anchors.left: parent.horizontalCenter
-            anchors.bottom: parent.verticalCenter
-            width: Math.max(parent.width, parent.height) / 2
-            height: width
-            angle: indicatorContainer.normalizedValue * 360 - rotation
-        }
-        Indicator {
-            id: indicatorBottomRight
-            anchors.left: parent.horizontalCenter
-            anchors.top: parent.verticalCenter
-            width: Math.max(parent.width, parent.height) / 2
-            height: width
-            angle: indicatorContainer.normalizedValue * 360 - rotation
-            rotation: 90
-        }
-        Indicator {
-            id: indicatorBottomLeft
-            anchors.right: parent.horizontalCenter
-            anchors.top: parent.verticalCenter
-            width: Math.max(parent.width, parent.height) / 2
-            height: width
-            angle: indicatorContainer.normalizedValue * 360 - rotation
-            rotation: 180
-        }
-        Indicator {
-            id: indicatorTopLeft
-            anchors.right: parent.horizontalCenter
-            anchors.bottom: parent.verticalCenter
-            width: Math.max(parent.width, parent.height) / 2
-            height: width
-            angle: indicatorContainer.normalizedValue * 360 - rotation
-            rotation: 270
+        Item {
+            anchors.fill: parent
+            layer.enabled: true
+            layer.effect: ShaderEffect {
+                property variant source
+                property variant maskSource: innerMaskSource
+
+                fragmentShader: "
+                    varying highp vec2 qt_TexCoord0;
+                    uniform highp float qt_Opacity;
+                    uniform lowp sampler2D source;
+                    uniform lowp sampler2D maskSource;
+                    void main(void) {
+                        gl_FragColor = texture2D(source, qt_TexCoord0.st) * (1.0 - texture2D(maskSource, qt_TexCoord0.st).a) * qt_Opacity;
+                    }
+                "
+            }
+
+            Indicator {
+                id: indicatorTopRight
+                anchors.left: parent.horizontalCenter
+                anchors.bottom: parent.verticalCenter
+                width: Math.max(parent.width, parent.height) / 2
+                height: width
+                angle: indicatorContainer.normalizedValue * 360 - rotation
+            }
+            Indicator {
+                id: indicatorBottomRight
+                anchors.left: parent.horizontalCenter
+                anchors.top: parent.verticalCenter
+                width: Math.max(parent.width, parent.height) / 2
+                height: width
+                angle: indicatorContainer.normalizedValue * 360 - rotation
+                rotation: 90
+            }
+            Indicator {
+                id: indicatorBottomLeft
+                anchors.right: parent.horizontalCenter
+                anchors.top: parent.verticalCenter
+                width: Math.max(parent.width, parent.height) / 2
+                height: width
+                angle: indicatorContainer.normalizedValue * 360 - rotation
+                rotation: 180
+            }
+            Indicator {
+                id: indicatorTopLeft
+                anchors.right: parent.horizontalCenter
+                anchors.bottom: parent.verticalCenter
+                width: Math.max(parent.width, parent.height) / 2
+                height: width
+                angle: indicatorContainer.normalizedValue * 360 - rotation
+                rotation: 270
+            }
         }
     }
     Item {
